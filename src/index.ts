@@ -1,4 +1,5 @@
-import express, { Request, Response } from "express";
+import express from "express";
+import type { Request, Response } from "express";
 
 // Initialize the express app
 const app = express();
@@ -14,8 +15,20 @@ interface Book {
 }
 
 let books: Book[] = [
-  { id: 1, title: "1984", author: "George Orwell", price: 15, category: "Fiction" },
-  { id: 2, title: "The Hobbit", author: "J.R.R. Tolkien", price: 25, category: "Fantasy" },
+  {
+    id: 1,
+    title: "1984",
+    author: "George Orwell",
+    price: 15,
+    category: "Fiction",
+  },
+  {
+    id: 2,
+    title: "The Hobbit",
+    author: "J.R.R. Tolkien",
+    price: 25,
+    category: "Fantasy",
+  },
 ];
 let nextId = 3;
 
@@ -33,11 +46,15 @@ app.post("/books", (req: Request, res: Response): void => {
     return;
   }
   if (price === undefined || typeof price !== "number" || price < 0) {
-    res.status(400).json({ error: "Price is required and must be a positive number." });
+    res
+      .status(400)
+      .json({ error: "Price is required and must be a positive number." });
     return;
   }
   if (!category || typeof category !== "string") {
-    res.status(400).json({ error: "Category is required and must be a string." });
+    res
+      .status(400)
+      .json({ error: "Category is required and must be a string." });
     return;
   }
 
@@ -61,17 +78,23 @@ app.get("/books", (req: Request, res: Response): void => {
   // Filter by category
   if (category) {
     if (typeof category !== "string") {
-      res.status(400).json({ error: "Category query parameter must be a string." });
+      res
+        .status(400)
+        .json({ error: "Category query parameter must be a string." });
       return;
     }
-    filteredBooks = filteredBooks.filter((b) => b.category.toLowerCase() === category.toLowerCase());
+    filteredBooks = filteredBooks.filter(
+      (b) => b.category.toLowerCase() === category.toLowerCase(),
+    );
   }
 
   // Filter by minPrice
   if (minPrice) {
     const minPriceVal = parseFloat(minPrice as string);
     if (isNaN(minPriceVal)) {
-      res.status(400).json({ error: "minPrice query parameter must be a valid number." });
+      res
+        .status(400)
+        .json({ error: "minPrice query parameter must be a valid number." });
       return;
     }
     filteredBooks = filteredBooks.filter((b) => b.price >= minPriceVal);
@@ -159,8 +182,7 @@ app.delete("/books/:id", (req: Request, res: Response): void => {
 });
 
 // Running app
-const PORT = 3000;
+const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
